@@ -1,3 +1,4 @@
+cat > app.py << 'EOF'
 from flask import Flask, request, redirect, send_from_directory, render_template_string
 import os
 app = Flask(__name__)
@@ -7,6 +8,8 @@ os.makedirs(VIDEO_FOLDER, exist_ok=True)
 HTML = """
 <!DOCTYPE html>
 <html><head><title>MyTube</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff0000">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Roboto}
@@ -67,6 +70,7 @@ body{background:#0f0f0f;color:#fff}
 function filter(){let q=document.getElementById('q').value.toLowerCase();document.querySelectorAll('.card').forEach(c=>{c.style.display=c.dataset.name.toLowerCase().includes(q)?'':'none'})}
 </script>
 {% endif %}
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 </body></html>
 """
 
@@ -79,6 +83,14 @@ def home():
 def watch(name):
     files=[f for f in os.listdir(VIDEO_FOLDER) if f.endswith(('.mp4','.webm','.mkv'))]
     return render_template_string(HTML, files=files, play=name, upload_page=False)
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('.', 'manifest.json')
+
+@app.route('/sw.js')
+def sw():
+    return send_from_directory('.', 'sw.js')
 
 @app.route('/videos/<name>')
 def serve(name):
@@ -94,4 +106,5 @@ def upload():
     return render_template_string(HTML, files=[], play=None, upload_page=True)
 
 app.run(host='0.0.0.0', port=5000)
+EOF
 
