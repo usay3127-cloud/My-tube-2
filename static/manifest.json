@@ -1,0 +1,16 @@
+{
+  "name": "MeraTube",
+  "short_name": "MeraTube",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ff0000",
+  "theme_color": "#ff0000",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
